@@ -17,7 +17,7 @@ export default function Todo() {
         console.log(e);
         setFormData({
             ...formData,
-            id: Math.floor(Math.random() *100000),
+            id: Math.floor(Math.random() *10000000),
             [e.target?.name]: e.target?.value,
         })
     }
@@ -43,6 +43,7 @@ export default function Todo() {
                     variant="outlined"
                     name="todo"
                     className='input-text'
+                    value={formData.todo}
                     onChange={onChangeTodo}
                 ></TextField>
                 <Button
