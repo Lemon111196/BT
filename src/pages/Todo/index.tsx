@@ -5,6 +5,8 @@ import { TextField, Button } from '@mui/material'
 import { ITodo } from './interface';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Dialog from '../../components/Dialog';
+// import { InsertEmoticon } from '@mui/icons-material';
 
 export default function Todo() {
     const id = useId();
@@ -12,25 +14,44 @@ export default function Todo() {
         id,
         todo: "",
     })
-    const [todo, setTodo] = useState<ITodo[]>([]);  
+    const [todo, setTodo] = useState<ITodo[]>([]);
     const onChangeTodo = (e: ChangeEvent<HTMLInputElement>) => {
         console.log(e);
         setFormData({
             ...formData,
-            id: Math.floor(Math.random() *10000000),
+            id: Math.floor(Math.random() * 10000000),
             [e.target?.name]: e.target?.value,
         })
     }
-      /**
-   * !Create a new todo
-   * @params
-   * @return void */
+    /**
+ * !Create a new todo
+ * @params
+ * @return void */
     const createTodo = () => {
         setFormData({
             id,
             todo: "",
         })
         setTodo([...todo, formData]);
+        console.log(createTodo);
+    }
+    //! Delete todo
+    const [deleteTodo, setDeleteTodo] = useState<boolean>(false);
+    const deleteModal = () => {
+        const deleteItem = todo.filter(item => {
+            return item.id !== formData.id;
+        })
+        setTodo(deleteItem)
+        setDeleteTodo(false)
+    }
+    const showDeleteModal = (id: string | number) => {
+        const deleteData = todo.find(item => {
+            return item.id === id
+        })
+        if (deleteData) {
+            setFormData(deleteData)
+        }
+        setDeleteTodo(true)
     }
     return (
         <TodoContainer>
@@ -47,9 +68,11 @@ export default function Todo() {
                     onChange={onChangeTodo}
                 ></TextField>
                 <Button
-                variant="outlined"
-                onChange={createTodo}
+                    variant="outlined"
+                    onClick={createTodo}
                 >Add</Button>
+            </div>
+
             <div className="listItem">
                 {todo.map((item, index) => (
                     <div className="singleTodo" key={index}>
@@ -58,13 +81,18 @@ export default function Todo() {
                             <span>{item.todo}</span>
                         </div>
                         <div className="group-btn">
-                        <ModeEditOutlineIcon></ModeEditOutlineIcon>
-                        <DeleteIcon></DeleteIcon>
+                            <ModeEditOutlineIcon className='edit'></ModeEditOutlineIcon>
+                            <DeleteIcon onClick={() => showDeleteModal(item.id)} className='delete'></DeleteIcon>
                         </div>
                     </div>
                 ))}
             </div>
-            </div>
+            <Dialog open={deleteTodo}
+            onSubmit={deleteModal}
+            title='Delete Todo'
+            submitBtn='Delete'>
+                <p>Are you sure to delete this?</p>
+            </Dialog>
         </TodoContainer>
     )
 }
