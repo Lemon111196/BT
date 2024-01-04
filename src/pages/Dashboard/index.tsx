@@ -4,14 +4,16 @@ import { useState } from "react";
 export default function Dashboard() {
 
   const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [lastName, setLastName] = useState<string>('');
 
-  function handleFirstNameChange(e) {
+  function handleFirstNameChange(e: any) {
     setFirstName(e.target.value);
+    console.log(e.target.value);
   }
 
-  function handleLastNameChange(e) {
+  function handleLastNameChange(e: any) {
     setLastName(e.target.value);
+    console.log(e.target.value);
   }
 
   function handleReset() {
